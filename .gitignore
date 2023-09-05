@@ -1,0 +1,6 @@
+# Those files or folders ignored by git
+
+myEnv/
+db.sqlite3
+__pycache__
+media

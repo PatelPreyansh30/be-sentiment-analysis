@@ -6,8 +6,11 @@ from . import serializer
 # Set your model here
 model_path = "./model/First_model"
 tokenizer_path = "./model/First_model_tokenizer"
+
+print("MODEL AND TOKENIZER GLOBALLY IMPORT STARTING")
 model = TFRobertaForSequenceClassification.from_pretrained(model_path)
 tokenizer = RobertaTokenizer.from_pretrained(tokenizer_path)
+print("MODEL AND TOKENIZER GLOBALLY IMPORT ENDING")
 
 
 def analysis(sentence):

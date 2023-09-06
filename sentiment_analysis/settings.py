@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +123,16 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# cors allowed ips
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "https://sentimental-analysis-pi.vercel.app",
+    "https://vercel.com/patelpreyansh30/sentimental-analysis/2FvQqfsBqbDVMu5sfbSUt6x2VXxc",
+    "https://sentimental-analysis-patelpreyansh30.vercel.app",
+    "https://sentimental-analysis-git-master-patelpreyansh30.vercel.app",
+]

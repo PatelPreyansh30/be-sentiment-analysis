@@ -1,41 +1,19 @@
-from django.core.cache import cache
 import numpy as np
-from rest_framework import views, response, status
 from transformers import TFRobertaForSequenceClassification, RobertaTokenizer
+from rest_framework import views, response, status
 from . import serializer
-# import tensorflow as tf
+
+# Set your model here
+model_path = "./model/First_model"
+tokenizer_path = "./model/First_model_tokenizer"
+model = TFRobertaForSequenceClassification.from_pretrained(model_path)
+tokenizer = RobertaTokenizer.from_pretrained(tokenizer_path)
 
 
-
-def get_model():
-    model_path = "./model/First_model"
-    # load_options = tf.saved_model.LoadOptions(experimental_io_device='/job:localhost')
-    # model = tf.saved_model.load(model_path, options=load_options)
-    model = cache.get("model")
-    if model is None:
-        model = TFRobertaForSequenceClassification.from_pretrained(model_path)
-        cache.set("model", model)
-        print("Model running")
-    return model
-
-
-def get_tokenizer():
-    tokenizer = cache.get("tokenizer")
-    if tokenizer is None:
-        tokenizer_path = "./model/First_model_tokenizer"
-        tokenizer = RobertaTokenizer.from_pretrained(tokenizer_path)
-        cache.set("tokenizer", tokenizer)
-        print("Tokenizer running")
-    return tokenizer
-
-
-def analysis(data):
-    model = get_model()
-    tokenizer = get_tokenizer()
-
-    data = str(data)
+def analysis(sentence):
+    sentence = str(sentence)
     data_encodings = tokenizer(
-        data, padding=True, truncation=True, return_tensors="tf", max_length=128)
+        sentence, padding=True, truncation=True, return_tensors="tf", max_length=128)
     input_ids = data_encodings["input_ids"]
     attention_mask = data_encodings["attention_mask"]
     predictions = model.predict(

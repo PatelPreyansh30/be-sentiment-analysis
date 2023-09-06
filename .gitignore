@@ -3,4 +3,5 @@
 myEnv/
 db.sqlite3
 __pycache__
-media
+media/
+model/

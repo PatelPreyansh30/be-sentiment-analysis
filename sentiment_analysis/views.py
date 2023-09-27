@@ -13,12 +13,17 @@ tokenizer = RobertaTokenizer.from_pretrained(tokenizer_path)
 print("MODEL AND TOKENIZER GLOBALLY IMPORT ENDING")
 
 
-def analysis(data):
+def tokenizer_analysis(data):
+    # Convert to string
     data = str(data)
+
+    # Convert string to data matrix
     data_encodings = tokenizer(
         data, padding=True, truncation=True, return_tensors="tf", max_length=128)
     input_ids = data_encodings["input_ids"]
     attention_mask = data_encodings["attention_mask"]
+
+    # Predict the sentence
     predictions = model.predict(
         {"input_ids": input_ids, "attention_mask": attention_mask})
     predicted_label = np.argmax(predictions[0])
@@ -32,7 +37,7 @@ def analysis(data):
         output = "Neutral"
     else:
         output = "Positive"
-    return {"type": output, "prediction": predictions, "scaled_probability": scaled_probabilities[predicted_label]}
+    return {"type": output, "scaled_probability": scaled_probabilities[predicted_label]}
 
 
 class SentimentAnalysisView(views.APIView):
@@ -40,6 +45,6 @@ class SentimentAnalysisView(views.APIView):
         serializer_data = serializer.SentimentAnalysisSerializer(
             data=request.data)
         if serializer_data.is_valid():
-            result = analysis(serializer_data.data.get('sentence'))
+            result = tokenizer_analysis(serializer_data.data.get('sentence'))
             return response.Response({"status": "success", "result": result}, status.HTTP_201_CREATED)
         return response.Response({"status": "error"}, status.HTTP_400_BAD_REQUEST)

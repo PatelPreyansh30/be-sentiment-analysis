@@ -43,3 +43,17 @@ class SentimentAnalysisView(views.APIView):
             result = analysis(serializer_data.data.get('sentence'))
             return response.Response({"status": "success", "result": result}, status.HTTP_201_CREATED)
         return response.Response({"status": "error"}, status.HTTP_400_BAD_REQUEST)
+    
+class BulkSentimentAnalysisView(views.APIView):
+    def post(self, request, format=None):
+        file = self.request.FILES.get('file')
+        serializer_data = serializer.BulkSentimentAnalysisSerializer(
+            data=request.data)
+        if serializer_data.is_valid():
+            result = analysis(serializer_data.data.get('sentence'))
+            return response.Response({"status": "success", "result": result}, status.HTTP_201_CREATED)
+
+        if not file:
+            return response.Response({'error': 'File not provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return response.Response({"status": "recived"}, status.HTTP_200_OK)

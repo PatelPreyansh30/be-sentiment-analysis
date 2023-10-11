@@ -1,5 +1,6 @@
 import numpy as np
-# import io, csv, pandas as pd
+import pandas as pd
+import json
 import tensorflow as tf
 # from joblib import load
 from transformers import TFRobertaForSequenceClassification, RobertaTokenizer
@@ -110,11 +111,8 @@ class SentimentAnalysisView(views.APIView):
             data=request.data)
         if serializer_data.is_valid():
             sentence = serializer_data.data.get('sentence')
-            result = vector_converstion.tokenizer_analysis(sentence, model, tokenizer)
-            # vector = vector_converstion.naive_byse_classification(
-            #     serializer_data.data.get('sentence'))
-            # print(vector)
-            # result = sahil.predict(vector)
+            result = vector_converstion.tokenizer_analysis(
+                sentence, model, tokenizer)
             return response.Response({"status": "success", "result": result}, status.HTTP_201_CREATED)
         return response.Response({"status": "error"}, status.HTTP_400_BAD_REQUEST)
 
@@ -126,9 +124,26 @@ class BulkSentimentAnalysisView(views.APIView):
             data=request.data)
         serializer_data.is_valid(raise_exception=True)
         file = serializer_data.validated_data['file']
-        with file.open('r') as txt_file:
-            reviews = txt_file.read().splitlines()
+
+        if file.name.endswith('.txt'):
+            with file.open('r') as txt_file:
+                reviews = txt_file.read().splitlines()
+                result = analyze_bulk_data(reviews)
+        elif file.name.endswith('.csv'):
+            df = pd.read_csv(file)
+            if 'review_text' not in df.columns:
+                print("CSV file must contain a 'review_text' column.")
+            reviews = df['review_text'].tolist()
             result = analyze_bulk_data(reviews)
+        elif file.name.endswith('.json'):
+            with file.open('r') as json_file:
+                data = json.load(json_file)
+            if 'reviews' not in data:
+                return "JSON file must contain a 'reviews' key with a list of review texts."
+            reviews = data['reviews']
+            result = analyze_bulk_data(reviews)
+        else:
+            return "Unsupported file format. Supported formats: .csv, .json, .txt."
 
         return response.Response({"status": "success", "result": result},
                                  status.HTTP_201_CREATED)

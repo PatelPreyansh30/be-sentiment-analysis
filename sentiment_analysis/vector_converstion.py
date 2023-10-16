@@ -80,48 +80,30 @@ def analyze_bulk_data(reviews, model, tokenizer):
     }
 
     analysis_results = {
-        "review_number": [
-            {
-                "label": "Positive",
-                "count": sentiment_counts['Positive']
-            },
-            {
-                "label": "Neutral",
-                "count": sentiment_counts['Neutral']
-            },
-            {
-                "label": "Negative",
-                "count": sentiment_counts['Negative']
-            },
-        ],
-        "review_percentage": [
-            {
-                "label": "Positive",
-                "count": "{:.2f}".format(percentages["Positive"])
-            },
-            {
-                "label": "Neutral",
-                "count": "{:.2f}".format(percentages["Neutral"])
-            },
-            {
-                "label": "Negative",
-                "count": "{:.2f}".format(percentages["Negative"])
-            },
-        ],
-        "review_average_probability": [
-            {
-                "label": "Positive",
-                "count": "{:.2f}".format(average_probabilities["Positive"][2]*100)
-            },
-            {
-                "label": "Neutral",
-                "count": "{:.2f}".format(average_probabilities["Neutral"][1]*100)
-            },
-            {
-                "label": "Negative",
-                "count": "{:.2f}".format(average_probabilities["Negative"][0]*100)
-            },
-        ]
+        "reviewNumber": {
+            "label": ["Positive", "Neutral", "Negative"],
+            "data": [
+                sentiment_counts['Positive'],
+                sentiment_counts['Neutral'],
+                sentiment_counts['Negative']
+            ]
+        },
+        "reviewPercentage": {
+            "label": ["Positive", "Neutral", "Negative"],
+            "data": [
+                "{:.2f}".format(percentages["Positive"]),
+                "{:.2f}".format(percentages["Neutral"]),
+                "{:.2f}".format(percentages["Negative"])
+            ]
+        },
+        "reviewAverageProbability": {
+            "label": ["Positive", "Neutral", "Negative"],
+            "data": [
+                "{:.2f}".format(average_probabilities["Positive"][2]*100),
+                "{:.2f}".format(average_probabilities["Neutral"][1]*100),
+                "{:.2f}".format(average_probabilities["Negative"][0]*100)
+            ]
+        },
     }
 
     return analysis_results

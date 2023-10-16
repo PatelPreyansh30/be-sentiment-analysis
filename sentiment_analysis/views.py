@@ -5,8 +5,8 @@ from rest_framework import views, response, status
 from . import serializer, vector_converstion
 
 # Set your model here
-model_path = "./model/First_model"
-tokenizer_path = "./model/First_model_tokenizer"
+model_path = "./model/second_model"
+tokenizer_path = "./model/tokenizer"
 
 print("MODEL AND TOKENIZER GLOBALLY IMPORT STARTING")
 model = TFRobertaForSequenceClassification.from_pretrained(model_path)
